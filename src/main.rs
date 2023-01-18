@@ -16,6 +16,10 @@ struct Cli {
     ///Set a different output path
     #[arg(short,long)]
     output: Option<String>,
+
+    ///Set a catagory to add notes to, rather than the standard date
+    #[arg(short,long)]
+    category: Option<String>,
 }
 
 fn main() {
@@ -36,6 +40,8 @@ fn main() {
     let path: PathBuf;
     if let Some(string) = cli.output {
         path = PathBuf::from(string);
+    } else if let Some(string) = cli.category {
+        path = [home, PathBuf::from("notes"), PathBuf::from(string), PathBuf::from(date.format("%d-%m-%Y").to_string())].iter().collect();
     } else {
         path = [home, PathBuf::from("notes"), PathBuf::from(date.year().to_string()), PathBuf::from(date.format("%b").to_string()), PathBuf::from(date.format("%e").to_string())].iter().collect();
     }
@@ -63,6 +69,8 @@ fn main() {
         contents.push_str("Exerpt from: ");
         contents.push_str(format!("{:?}\n", abs_path_str).as_str());
 
+        //Only taking 5 lines because that file should live on the computer somewhere, so why copy all of it
+        //Some context should be all that is needed
         let mut count = 0;
         for line in lines {
             contents.push_str(&line.expect("Could not read file."));
