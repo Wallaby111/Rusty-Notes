@@ -66,8 +66,15 @@ fn main() {
         let reader = io::BufReader::new(file);
         let lines = reader.lines();
 
+        //Get some context from user
+        let mut context = String::new();
+        println!("Context for file:");
+        io::stdin().read_line(&mut context).expect("Unable to read context.");
+
+        //Format and add the header info
+        contents.push_str(&format!("Context: {context}"));
         contents.push_str("Exerpt from: ");
-        contents.push_str(format!("{:?}\n", abs_path_str).as_str());
+        contents.push_str(format!("{abs_path_str:?}\n").as_str());
 
         //Only taking 5 lines because that file should live on the computer somewhere, so why copy all of it
         //Some context should be all that is needed
